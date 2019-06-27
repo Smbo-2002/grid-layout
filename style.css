@@ -1,0 +1,21 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+
+.grid-layout {
+    list-style-type: none;
+}
+
+.grid-layout {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.grid-layout li {
+    flex: 1;
+    padding: 10px;
+}
