@@ -54,62 +54,57 @@
 	};
 
 	// Initializing given element
-	function elementInit (options, element) { // Kpcnel mi funnkciai mej
+	function elementInit (options, element) {
 		var ul = $(element);
+		var li = ul.children();
 
-		$(element).addClass('grid-layout');
-		var viewWidth = $('.grid-layout').width();
-		var columns = Math.floor(viewWidth / (options.width + options.padding));
-		var currColumn = 1;
-		var heights = [];
-		$(element).children().each(function (index, item) {
-			var left = 0;
-			var top = 0;
-			var html = "<img width='"+ options.width +"px' alt='"+ $(item).attr('data-alt') +"' src='"+ $(item).attr('data-url') +"'/>";
-			$(item).append(html);
-			
-			left = (currColumn-1)*(options.width + options.padding);
-			if (index+1>columns) {
-				top = parseInt($($(element).children()[index-columns]).css('top')) + parseInt($($(element).children()[index-columns]).css('height').replace('px',''));
-			}
-			heights[currColumn-1] = top + parseInt($(item).css('height').replace('px','')) + options.padding;
-			if(currColumn+1 > columns) {
-				currColumn = 1;
-			} else {
-				currColumn++;
-			}
-			$(item).css("left", left + "px" );
-			$(item).css("top", top + options.padding + "px");
-			
+		ul.addClass('grid-layout');
+
+		li.each(function (index, item) {
+
+			var tag = "<img width='"+ options.width +"px' alt='"+ $(item).attr('data-alt') +"' src='"+ $(item).attr('data-url') +"'/>";
+
+			$(item).append(tag);
+
 		});
-		heights.sort(function(a, b){return b-a});
-		$(element).css("height", heights[0]); // Heigt sord dzel
-	}
 
+	}
 
 	// Function, repsponsibe for repositioning the images on the web page
 	function wrap (options, element) {
-		var viewWidth = $('.grid-layout').width();
+		var ul = $(element);
+		var li = ul.children();
+
+		var viewWidth = ul.width();
 		var columns = Math.floor(viewWidth / (options.width + options.padding));
-		var currColumn = 1;
-		var heights = [];
-		$(element).children().each(function (index, item) {
+		var currColumn = 0;
+		var ulHeight = 0;
+
+		li.each(function (index, item) {
 			var left = 0;
 			var top = 0;
-			left = (currColumn-1)*(options.width + options.padding);
-			if (index+1>columns) {
-				top = parseInt($($(element).children()[index-columns]).css('top')) + parseInt($($(element).children()[index-columns]).css('height')) + options.padding; // Krchatel
-			}
-			heights[currColumn-1] = top + parseInt($(item).css('height').replace('px',''));
-			if(currColumn+1 > columns) {
-				currColumn = 1;
+			var tempHeight;
+			
+			left = (currColumn)*(options.width + options.padding);
+			
+			top = index + 1 > columns 
+				? parseInt( $(li[index-columns]).css('top') ) + parseInt($(li[index-columns]).css('height')) + options.padding
+				: top;
+
+			tempHeight = top + parseInt($(item).css('height')) + options.padding;
+
+			ulHeight = ulHeight > tempHeight ?  ulHeight : tempHeight;
+
+			if(currColumn+1 == columns) {
+				currColumn = 0;
 			} else {
 				currColumn++;
 			}
+			
 			$(item).css("left", left + "px" );
-			$(item).css("top", top + options.padding + "px" );
+			$(item).css("top", top + "px");
+			
 		});
-		heights.sort(function(a, b){return b-a});
-		$(element).css("height", heights[0]); // Heigt sord dzel
+		$(element).css("height", ulHeight);
 	}
 } ( jQuery ));
