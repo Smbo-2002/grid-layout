@@ -23,9 +23,7 @@
 
 		$.each(images, function (index, img) {
 			$(img).on('load', checkLoaded);
-			$(img).on('error', function () {
-				len--;
-			});
+			$(img).on('error', checkLoaded);
 		});		
 
 		function checkLoaded(status) {
