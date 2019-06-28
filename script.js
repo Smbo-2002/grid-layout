@@ -17,15 +17,18 @@
 		var that = this;
 
 		// This code allows us to fix the positions when all the images are loaded
-		var imgs = document.images,
-			len = imgs.length,
+		var images = $(this).find('img'),
+			len = images.length,
 			counter = 0;
 
-		[].forEach.call( imgs, function( img ) {
-			img.addEventListener( 'load', incrementCounter, false );
-		} );
+		$.each(images, function (index, img) {
+			$(img).on('load', checkLoaded);
+			$(img).on('error', function () {
+				len--;
+			});
+		});		
 
-		function incrementCounter() {
+		function checkLoaded(status) {
 			counter++;
 			if ( counter === len ) {
 				wrap(options, that);
@@ -51,7 +54,9 @@
 	};
 
 	// Initializing given element
-	function elementInit (options, element) {
+	function elementInit (options, element) { // Kpcnel mi funnkciai mej
+		var ul = $(element);
+
 		$(element).addClass('grid-layout');
 		var viewWidth = $('.grid-layout').width();
 		var columns = Math.floor(viewWidth / (options.width + options.padding));
@@ -65,9 +70,9 @@
 			
 			left = (currColumn-1)*(options.width + options.padding);
 			if (index+1>columns) {
-				top = parseInt($($(element).children()[index-columns]).css('top').replace('px','')) + parseInt($($(element).children()[index-columns]).css('height').replace('px',''));
+				top = parseInt($($(element).children()[index-columns]).css('top')) + parseInt($($(element).children()[index-columns]).css('height').replace('px',''));
 			}
-			heights[currColumn-1] = top + parseInt($(item).css('height').replace('px',''));
+			heights[currColumn-1] = top + parseInt($(item).css('height').replace('px','')) + options.padding;
 			if(currColumn+1 > columns) {
 				currColumn = 1;
 			} else {
@@ -78,7 +83,7 @@
 			
 		});
 		heights.sort(function(a, b){return b-a});
-		$(element).css("height", heights[0]);
+		$(element).css("height", heights[0]); // Heigt sord dzel
 	}
 
 
@@ -93,7 +98,7 @@
 			var top = 0;
 			left = (currColumn-1)*(options.width + options.padding);
 			if (index+1>columns) {
-				top = parseInt($($(element).children()[index-columns]).css('top').replace('px','')) + parseInt($($(element).children()[index-columns]).css('height').replace('px',''));
+				top = parseInt($($(element).children()[index-columns]).css('top')) + parseInt($($(element).children()[index-columns]).css('height')) + options.padding; // Krchatel
 			}
 			heights[currColumn-1] = top + parseInt($(item).css('height').replace('px',''));
 			if(currColumn+1 > columns) {
@@ -105,8 +110,6 @@
 			$(item).css("top", top + options.padding + "px" );
 		});
 		heights.sort(function(a, b){return b-a});
-		$(element).css("height", heights[0]);
+		$(element).css("height", heights[0]); // Heigt sord dzel
 	}
-
-
 } ( jQuery ));
