@@ -67,7 +67,8 @@
 			$(item).append(tag);
 
 		});
-
+		
+		wrap(options, element);
 	}
 
 	// Function, repsponsibe for repositioning the images on the web page
@@ -77,6 +78,7 @@
 
 		var viewWidth = ul.width();
 		var columns = Math.floor(viewWidth / (options.width + options.padding));
+		columns = columns < 1 ? 1 : columns;
 		var currColumn = 0;
 		var ulHeight = 0;
 
@@ -84,22 +86,18 @@
 			var left = 0;
 			var top = 0;
 			var tempHeight;
-			
+			var topLi = $(li[index-columns]);
 			left = (currColumn)*(options.width + options.padding);
 			
 			top = index + 1 > columns 
-				? parseInt( $(li[index-columns]).css('top') ) + parseInt($(li[index-columns]).css('height')) + options.padding
+				? parseInt(topLi.css('top')) + parseInt(topLi.css('height')) + options.padding
 				: top;
 
 			tempHeight = top + parseInt($(item).css('height')) + options.padding;
 
 			ulHeight = ulHeight > tempHeight ?  ulHeight : tempHeight;
 
-			if(currColumn+1 == columns) {
-				currColumn = 0;
-			} else {
-				currColumn++;
-			}
+			currColumn =  ++currColumn % columns;
 			
 			$(item).css("left", left + "px" );
 			$(item).css("top", top + "px");

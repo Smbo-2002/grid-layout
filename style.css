@@ -20,6 +20,10 @@ body {
     cursor: pointer;
 }
 
+.grid-layout li img {
+    max-width: 100%;
+}
+
 .grid-modal {
     display: grid;
     height: 100%;
@@ -36,3 +40,4 @@ body {
 	max-height: 100vh;
     margin: auto;
 }
+
